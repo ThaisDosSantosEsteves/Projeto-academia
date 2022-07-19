@@ -1,12 +1,14 @@
 from fastapi import FastAPI
 from infoClientes import cliente
 from alteracaoCliente import alteracaoCliente
+from identificacaoInfosCiente import identificacaoInfosCliente
 
 caracteresEspeciais = ['`', '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '-', '+', '=', '{', '[', '}', '}', '|',
               '\\', ':', ';', '"', '\'', '<', ',', '>', '.', '?', '/']
 
 app = FastAPI()
 listaClientes = list()
+
 @app.get("/")
 async def root():
     return listaClientes
@@ -56,7 +58,35 @@ async def alterarCliente(identificacaoCliente:alteracaoCliente):
     for dados in listaClientes:
         if identificacaoCliente.identificadorCpf == dados.cpf:
             print("Achou o cliente")
+
+            dados.nome = identificacaoCliente.novoNome
+            dados.cpf = identificacaoCliente.novoCpf
+            dados.email = identificacaoCliente.novoEmail
+            dados.dataNascimento = identificacaoCliente.novaDataNascimento
+            dados.cartaoDeCredito.numero = identificacaoCliente.novoCartaoDeCredito.numero
+            dados.cartaoDeCredito.cvv = identificacaoCliente.novoCartaoDeCredito.cvv
+            dados.cartaoDeCredito.vencimento = identificacaoCliente.novoCartaoDeCredito.vencimento
+
             return "Achou"
+
+
+@app.get("/showclient")
+async def mostrarCliente(identificacaoInfosCiente:identificacaoInfosCliente):
+
+    for dados in listaClientes:
+        if identificacaoInfosCiente.identificadorCpf == dados.cpf:
+            return dados
+
+
+@app.delete("/removeclient")
+async def removerCliente(identificacaoInfosCiente:identificacaoInfosCliente):
+
+    for dados in listaClientes:
+        if identificacaoInfosCiente.identificadorCpf == dados.cpf:
+            listaClientes.remove(dados)
+            return listaClientes
+
+
 
 
 
