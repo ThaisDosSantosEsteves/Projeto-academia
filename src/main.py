@@ -27,6 +27,9 @@ async def criarCliente(novoCliente:cliente):
     if len(novoCliente.cpf) != tamanhoCpf or not cpfValido:
         print("Erro no CPF!")
         return "ERRO! CPF inválido."
+    for dados in listaClientes:
+        if dados.cpf == novoCliente.cpf:
+            return "cliente já cadastrado"
 
     for caracteres in caracteresEspeciais:
         if caracteres in novoCliente.nome:
@@ -41,7 +44,7 @@ async def criarCliente(novoCliente:cliente):
         print("Erro no número do cartão.")
         return "ERRO! Número do cartao inválido."
 
-    if not cvvValido:
+    if not cvvValido or len(novoCliente.cartaoDeCredito.cvv) > 3:
         print("Erro no CVV do cartão.")
         return "ERRO! CVV do cartao inválido."
 
