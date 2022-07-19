@@ -2,15 +2,19 @@ from fastapi import FastAPI
 from infoClientes import cliente
 from alteracaoCliente import alteracaoCliente
 from identificacaoInfosCiente import identificacaoInfosCliente
+from datetime import datetime
 
 caracteresEspeciais = ['`', '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '-', '+', '=', '{', '[', '}', '}', '|',
               '\\', ':', ';', '"', '\'', '<', ',', '>', '.', '?', '/']
 
 app = FastAPI()
 listaClientes = list()
+format = "%d-%m-%Y"
 
-@app.get("/")
-async def root():
+
+
+@app.get("/showallclients")
+async def mostrarClientes():
     return listaClientes
 
 
@@ -23,7 +27,10 @@ async def criarCliente(novoCliente:cliente):
     cvvValido = novoCliente.cartaoDeCredito.cvv.isdigit()
     tamanhoCvvCartao = 3
 
-
+    try:
+        res = datetime.strptime(novoCliente.dataNascimento, format)
+    except ValueError:
+        return "Formato de data inválida."
 
     if len(novoCliente.cpf) != tamanhoCpf or not cpfValido:
         print("Erro no CPF!")
