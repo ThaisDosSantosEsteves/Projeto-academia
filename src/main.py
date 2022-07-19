@@ -76,8 +76,8 @@ async def alterarCliente(identificacaoCliente:alteracaoCliente):
             dados.cartaoDeCredito.cvv = identificacaoCliente.novoCartaoDeCredito.cvv
             dados.cartaoDeCredito.vencimento = identificacaoCliente.novoCartaoDeCredito.vencimento
             return "Achou"
-        else:
-            return "Cliente não cadastrado"
+
+    return "Cliente não cadastrado"
 
 
 @app.get("/showclient")
@@ -86,8 +86,8 @@ async def mostrarCliente(identificacaoInfosCiente:identificacaoInfosCliente):
     for dados in listaClientes:
         if identificacaoInfosCiente.identificadorCpf == dados.cpf:
             return dados
-        else:
-            return "Cliente não cadastrado"
+
+    return "Cliente não cadastrado"
 
 @app.delete("/removeclient")
 async def removerCliente(identificacaoInfosCiente:identificacaoInfosCliente):
@@ -96,8 +96,8 @@ async def removerCliente(identificacaoInfosCiente:identificacaoInfosCliente):
         if identificacaoInfosCiente.identificadorCpf == dados.cpf:
             listaClientes.remove(dados)
             return listaClientes
-        else:
-            return "Cliente não cadastrado"
+
+    return "Cliente não cadastrado"
 
 
 
