@@ -19,8 +19,9 @@ async def criarCliente(novoCliente:cliente):
     tamanhoCpf = 11
     cpfValido = novoCliente.cpf.isdigit()
     numeroCartaoValido = novoCliente.cartaoDeCredito.numero.isdigit()
+    tamanhoNumeroCartao = 16
     cvvValido = novoCliente.cartaoDeCredito.cvv.isdigit()
-
+    tamanhoCvvCartao = 3
 
 
 
@@ -40,11 +41,13 @@ async def criarCliente(novoCliente:cliente):
         print("Erro no email.")
         return "ERRO! Email inválido"
 
-    if not numeroCartaoValido:
+    if not numeroCartaoValido or len(novoCliente.cartaoDeCredito.numero) != tamanhoNumeroCartao:
         print("Erro no número do cartão.")
         return "ERRO! Número do cartao inválido."
 
-    if not cvvValido or len(novoCliente.cartaoDeCredito.cvv) > 3:
+
+
+    if not cvvValido or len(novoCliente.cartaoDeCredito.cvv) != tamanhoCvvCartao:
         print("Erro no CVV do cartão.")
         return "ERRO! CVV do cartao inválido."
 
