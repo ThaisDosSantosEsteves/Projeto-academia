@@ -40,6 +40,9 @@ async def criarCliente(novoCliente:cliente):
     if '@' not in novoCliente.email or '.com' not in novoCliente.email:
         print("Erro no email.")
         return "ERRO! Email inválido"
+    for dados in listaClientes:
+        if dados.email == novoCliente.email:
+            return "email já cadastrado"
 
     if not numeroCartaoValido or len(novoCliente.cartaoDeCredito.numero) != tamanhoNumeroCartao:
         print("Erro no número do cartão.")
