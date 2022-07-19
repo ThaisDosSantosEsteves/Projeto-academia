@@ -3,6 +3,7 @@ from infoClientes import cliente
 from alteracaoCliente import alteracaoCliente
 from identificacaoInfosCiente import identificacaoInfosCliente
 from datetime import datetime
+import re
 
 caracteresEspeciais = ['`', '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '-', '+', '=', '{', '[', '}', '}', '|',
               '\\', ':', ';', '"', '\'', '<', ',', '>', '.', '?', '/']
@@ -10,7 +11,7 @@ caracteresEspeciais = ['`', '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')
 app = FastAPI()
 listaClientes = list()
 format = "%d-%m-%Y"
-
+pattern = "^(0[1-9]|1[0-2])\/?([0-9]{4}|[0-9]{2})$"
 
 
 @app.get("/showallclients")
@@ -62,6 +63,9 @@ async def criarCliente(novoCliente:cliente):
         return "ERRO! CVV do cartao inválido."
 
 
+    result = re.match(pattern, novoCliente.cartaoDeCredito.vencimento)
+    if not result:
+        return "Formato de Vencimento inválido."
 
 
     listaClientes.append(novoCliente)
