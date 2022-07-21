@@ -69,6 +69,41 @@ async def alterarCliente(identificacaoCliente:alteracaoCliente):
         if identificacaoCliente.identificadorCpf == dados.cpf:
             print("Achou o cliente")
 
+            cpfValidado = validacaoDeDados.validarCpf(identificacaoCliente.novoCpf)
+            if not cpfValidado:
+                return "ERRO! Cpf inválido."
+            cadastroValidado = validacaoDeDados.validarCadastroCpf(listaClientes, identificacaoCliente.novoCpf)
+            if not cadastroValidado:
+                return "ERRO! Cpf já cadastrado"
+
+            nomeValidado = validacaoDeDados.validarNome(identificacaoCliente.novoNome)
+            if not nomeValidado:
+                return "ERRO! Nome inválido."
+
+            emailValidado = validacaoDeDados.validarEmail(identificacaoCliente.novoEmail)
+            if not emailValidado:
+                return "ERRO! Email inválido."
+            cadastroValidadoEmail = validacaoDeDados.validarCadastroCpfEmail(listaClientes, identificacaoCliente.novoEmail)
+            if not cadastroValidadoEmail:
+                return "ERRO! Email já cadastrado."
+
+            numeroCartaoValidado = validacaoDeDados.validarNumeroCartao(identificacaoCliente.novoCartaoDeCredito.numero)
+            if not numeroCartaoValidado:
+                return "ERRO! Número do cartão inválido."
+
+            cvvValidado = validacaoDeDados.validarCvvCartao(identificacaoCliente.novoCartaoDeCredito.cvv)
+            if not cvvValidado:
+                return "ERRO! CVV inválido."
+
+            result = re.match(pattern, identificacaoCliente.novoCartaoDeCredito.vencimento)
+            if not result:
+                return "Formato de Vencimento inválido."
+
+            try:
+                res = datetime.strptime(identificacaoCliente.novaDataNascimento, format)
+            except ValueError:
+                return "Formato de data inválida."
+
             dados.nome = identificacaoCliente.novoNome
             dados.cpf = identificacaoCliente.novoCpf
             dados.email = identificacaoCliente.novoEmail
