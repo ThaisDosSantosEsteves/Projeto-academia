@@ -6,8 +6,6 @@ from datetime import datetime
 import re
 import validacaoDeDados
 
-caracteresEspeciais = ['`', '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '-', '+', '=', '{', '[', '}', '}', '|',
-              '\\', ':', ';', '"', '\'', '<', ',', '>', '.', '?', '/']
 
 app = FastAPI()
 listaClientes = list()
