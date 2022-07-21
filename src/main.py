@@ -4,6 +4,7 @@ from alteracaoCliente import alteracaoCliente
 from identificacaoInfosCiente import identificacaoInfosCliente
 from datetime import datetime
 import re
+import validacaoDeDados
 
 caracteresEspeciais = ['`', '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '-', '+', '=', '{', '[', '}', '}', '|',
               '\\', ':', ';', '"', '\'', '<', ',', '>', '.', '?', '/']
@@ -19,54 +20,45 @@ async def mostrarClientes():
     return listaClientes
 
 
+
+
 @app.post("/create")
 async def criarCliente(novoCliente:cliente):
-    tamanhoCpf = 11
-    cpfValido = novoCliente.cpf.isdigit()
-    numeroCartaoValido = novoCliente.cartaoDeCredito.numero.isdigit()
-    tamanhoNumeroCartao = 16
-    cvvValido = novoCliente.cartaoDeCredito.cvv.isdigit()
-    tamanhoCvvCartao = 3
 
-    try:
-        res = datetime.strptime(novoCliente.dataNascimento, format)
-    except ValueError:
-        return "Formato de data inválida."
+    cpfValidado = validacaoDeDados.validarCpf(novoCliente.cpf)
+    if not cpfValidado:
+        return "ERRO! Cpf inválido."
+    cadastroValidado = validacaoDeDados.validarCadastroCpf(listaClientes,novoCliente.cpf)
+    if not cadastroValidado:
+        return "ERRO! Cpf já cadastrado"
 
-    if len(novoCliente.cpf) != tamanhoCpf or not cpfValido:
-        print("Erro no CPF!")
-        return "ERRO! CPF inválido."
-    for dados in listaClientes:
-        if dados.cpf == novoCliente.cpf:
-            return "cliente já cadastrado"
+    nomeValidado = validacaoDeDados.validarNome(novoCliente.nome)
+    if not nomeValidado:
+        return "ERRO! Nome inválido."
 
-    for caracteres in caracteresEspeciais:
-        if caracteres in novoCliente.nome:
-            print('Erro no nome.')
-            return "ERRO! Nome inválido."
+    emailValidado = validacaoDeDados.validarEmail(novoCliente.email)
+    if not emailValidado:
+        return "ERRO! Email inválido."
+    cadastroValidadoEmail = validacaoDeDados.validarCadastroCpfEmail(listaClientes,novoCliente.email)
+    if not cadastroValidadoEmail:
+        return "ERRO! Email já cadastrado."
 
-    if '@' not in novoCliente.email or '.com' not in novoCliente.email:
-        print("Erro no email.")
-        return "ERRO! Email inválido"
-    for dados in listaClientes:
-        if dados.email == novoCliente.email:
-            return "email já cadastrado"
+    numeroCartaoValidado = validacaoDeDados.validarNumeroCartao(novoCliente.cartaoDeCredito.numero)
+    if not numeroCartaoValidado:
+        return "ERRO! Número do cartão inválido."
 
-    if not numeroCartaoValido or len(novoCliente.cartaoDeCredito.numero) != tamanhoNumeroCartao:
-        print("Erro no número do cartão.")
-        return "ERRO! Número do cartao inválido."
-
-
-
-    if not cvvValido or len(novoCliente.cartaoDeCredito.cvv) != tamanhoCvvCartao:
-        print("Erro no CVV do cartão.")
-        return "ERRO! CVV do cartao inválido."
-
+    cvvValidado = validacaoDeDados.validarCvvCartao(novoCliente.cartaoDeCredito.cvv)
+    if not cvvValidado:
+        return "ERRO! CVV inválido."
 
     result = re.match(pattern, novoCliente.cartaoDeCredito.vencimento)
     if not result:
         return "Formato de Vencimento inválido."
 
+    try:
+        res = datetime.strptime(novoCliente.dataNascimento, format)
+    except ValueError:
+        return "Formato de data inválida."
 
     listaClientes.append(novoCliente)
     return novoCliente
