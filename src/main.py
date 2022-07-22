@@ -18,8 +18,6 @@ async def mostrarClientes():
     return listaClientes
 
 
-
-
 @app.post("/create")
 async def criarCliente(novoCliente:cliente):
 
@@ -124,6 +122,7 @@ async def mostrarCliente(identificacaoInfosCiente:identificacaoInfosCliente):
             return dados
 
     return "Cliente não cadastrado"
+
 
 @app.delete("/removeclient")
 async def removerCliente(identificacaoInfosCiente:identificacaoInfosCliente):
