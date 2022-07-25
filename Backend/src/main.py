@@ -24,7 +24,7 @@ async def criarCliente(novoCliente:cliente):
     cpfValidado = validacaoDeDados.validarCpf(novoCliente.cpf)
     if not cpfValidado:
         return "ERRO! Cpf inválido."
-    cadastroValidado = validacaoDeDados.validarCadastroCpf(listaClientes,novoCliente.cpf)
+    cadastroValidado = validacaoDeDados.validarCadastroCpf(listaClientes, novoCliente.cpf)
     if not cadastroValidado:
         return "ERRO! Cpf já cadastrado"
 
@@ -35,7 +35,7 @@ async def criarCliente(novoCliente:cliente):
     emailValidado = validacaoDeDados.validarEmail(novoCliente.email)
     if not emailValidado:
         return "ERRO! Email inválido."
-    cadastroValidadoEmail = validacaoDeDados.validarCadastroCpfEmail(listaClientes,novoCliente.email)
+    cadastroValidadoEmail = validacaoDeDados.validarCadastroCpfEmail(listaClientes, novoCliente.email)
     if not cadastroValidadoEmail:
         return "ERRO! Email já cadastrado."
 
