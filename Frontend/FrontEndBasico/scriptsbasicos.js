@@ -22,7 +22,8 @@ class Validator {
         }
 
         let inputs = form.getElementsByTagName('input');
-
+        console.log(inputs)
+        let success = false
         let inputsArray = [...inputs];
 
         inputsArray.forEach(function(input){
@@ -32,13 +33,33 @@ class Validator {
                     let method = this.validations[i].replace("data-", "").replace("-", "");
                     let value = input.getAttribute(this.validations[i]);
 
-                    this[method](input, value);
+                    success = this[method](input, value);
                 }
             }
 
         },this);
-        
 
+
+        let obj = {
+            "nome": inputs['nome'].value,
+            "cpf": inputs["cpf"].value,
+            "dataNascimento": inputs["DataNascimento"].value,
+            "email": inputs["email"].value,
+            "cartaoDeCredito": {
+                "numero": inputs["numeroCartao"].value,
+                "vencimento": inputs["vencimento"].value,
+                "cvv": inputs["cvv"].value
+            }
+            
+        }
+        console.log(obj)
+        console.log(success)
+
+        if (success){
+            postData(obj)
+        }
+        
+        
     }
 
     minlength(input, minValue){
@@ -47,7 +68,10 @@ class Validator {
         
         if(inputLength < minValue){
             this.printMessage(input, errorMessage);
+            return false
         }
+
+        return true
     }
 
     maxlength(input, maxValue){
@@ -55,7 +79,9 @@ class Validator {
         let errorMessage = `O campo precisa ter ${maxValue} caracteres`;
         if(inputLength > maxValue){
             this.printMessage(input, errorMessage);
+            return false
         }
+        return true
     }
 
     emailvalidate(input) {
@@ -64,7 +90,9 @@ class Validator {
         let errorMessage = `Insira um e-mail no padrão exemplo@email.com`;
         if(!re.test(email)) {
           this.printMessage(input, errorMessage);
+            return false
         }
+        return true
     
       }
 
@@ -74,7 +102,9 @@ class Validator {
         let errorMessage = `Este campo não aceita números nem caracteres especiais`;
         if(!re.test(inputValue)) {
           this.printMessage(input, errorMessage);
+          return false
         }
+        return true
     
       }    
     
@@ -84,8 +114,9 @@ class Validator {
         let errorMessage = `Este campo não aceita letras nem caracteres especiais`;
         if(!re.test(inputValue)) {
           this.printMessage(input, errorMessage);
+            return false
         }
-    
+        return true
       }
 
 
@@ -105,7 +136,9 @@ class Validator {
         if(inputValue ===''){
             let errorMessage = `Este campo é obrigatório`;
             this.printMessage(input, errorMessage);
+            return false
         }
+        return true
     }
 
     cleanValidations(validations){
@@ -123,4 +156,25 @@ submit.addEventListener('click', function(e) {
     e.preventDefault();
 
     validator.validate(form);
+
+
+
 })
+
+
+async function postData (data) {
+    
+  
+    const response = await fetch("http://127.0.0.1:8000/create", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+  
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${reponse.status}`)
+    }
+    console.log("Request successful!")
+  }

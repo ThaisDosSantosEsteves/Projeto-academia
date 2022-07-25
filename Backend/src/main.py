@@ -5,11 +5,22 @@ from identificacaoInfosCiente import identificacaoInfosCliente
 from datetime import datetime
 import re
 import validacaoDeDados
-
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 listaClientes = list()
-format = "%d-%m-%Y"
+format = "%d/%m/%Y"
 pattern = "^(0[1-9]|1[0-2])\/?([0-9]{4}|[0-9]{2})$"
 
 
@@ -20,42 +31,53 @@ async def mostrarClientes():
 
 @app.post("/create")
 async def criarCliente(novoCliente:cliente):
+    print("entrou")
+    print(novoCliente)
 
     cpfValidado = validacaoDeDados.validarCpf(novoCliente.cpf)
     if not cpfValidado:
+        print("erro no cpf")
         return "ERRO! Cpf inválido."
     cadastroValidado = validacaoDeDados.validarCadastroCpf(listaClientes, novoCliente.cpf)
     if not cadastroValidado:
+        print("cpf ja cadastrado")
         return "ERRO! Cpf já cadastrado"
 
     nomeValidado = validacaoDeDados.validarNome(novoCliente.nome)
     if not nomeValidado:
+        print("nome invalido")
         return "ERRO! Nome inválido."
 
     emailValidado = validacaoDeDados.validarEmail(novoCliente.email)
     if not emailValidado:
+        print("email invalido")
         return "ERRO! Email inválido."
     cadastroValidadoEmail = validacaoDeDados.validarCadastroCpfEmail(listaClientes, novoCliente.email)
     if not cadastroValidadoEmail:
+        print("email ja cadastrado")
         return "ERRO! Email já cadastrado."
 
     numeroCartaoValidado = validacaoDeDados.validarNumeroCartao(novoCliente.cartaoDeCredito.numero)
     if not numeroCartaoValidado:
+        print("numero de cartao invalido")
         return "ERRO! Número do cartão inválido."
 
     cvvValidado = validacaoDeDados.validarCvvCartao(novoCliente.cartaoDeCredito.cvv)
     if not cvvValidado:
+        print("cvv invalido")
         return "ERRO! CVV inválido."
 
     result = re.match(pattern, novoCliente.cartaoDeCredito.vencimento)
     if not result:
+        print("vencimento errado")
         return "Formato de Vencimento inválido."
 
     try:
         res = datetime.strptime(novoCliente.dataNascimento, format)
     except ValueError:
+        print("data invalida")
         return "Formato de data inválida."
-
+    print(novoCliente)
     listaClientes.append(novoCliente)
     return novoCliente
 
