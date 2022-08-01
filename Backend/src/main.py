@@ -136,11 +136,11 @@ async def alterarCliente(identificacaoCliente:alteracaoCliente):
     return "Cliente não cadastrado"
 
 
-@app.get("/showclient")
-async def mostrarCliente(identificacaoInfosCiente:identificacaoInfosCliente):
+@app.get("/showclient/{cpf}")
+async def mostrarCliente(cpf):
 
     for dados in listaClientes:
-        if identificacaoInfosCiente.identificadorCpf == dados.cpf:
+        if cpf == dados.cpf:
             return dados
 
     return "Cliente não cadastrado"

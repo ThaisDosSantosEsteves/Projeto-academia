@@ -11,9 +11,6 @@ class Validator {
             'data-email-validate',
             'data-min-length',
             'data-max-length',
-            
-            
-
         ]
     }
 
@@ -44,7 +41,7 @@ class Validator {
         },this);
 
 
-        let obj = {
+        let data = {
             "nome": inputs['nome'].value,
             "cpf": inputs["cpf"].value,
             "dataNascimento": inputs["DataNascimento"].value,
@@ -56,13 +53,12 @@ class Validator {
             }
             
         }
-        console.log(obj)
-        console.log(success)
 
-        if (success){
-            postData(obj)
+
+        return {
+            "success": success,
+            "data": data
         }
-        
         
     }
 
@@ -158,15 +154,16 @@ let validator = new Validator();
 //Evento que dispara as validações
 submit.addEventListener('click', function(e) {
     e.preventDefault();
-
-    validator.validate(form);
-
-
-
+    let result = validator.validate(form);
+    let data = result["data"]
+    let success = result["success"]
+    if(success){
+        createClient(data)
+    }
 })
 
 
-async function postData (data) {
+async function createClient (data) {
     
   
     const response = await fetch("http://127.0.0.1:8000/create", {
@@ -185,27 +182,52 @@ async function postData (data) {
 
 
 
-
   // ALTERAR
 
-  let formChange = document.querySelector(".search-box");
+  let formChange = document.querySelector(".change-client");
   let search = document.querySelector(".search-txt");
   let searchBtn = document.querySelector(".btn-search")
 
-  searchBtn.addEventListener("click", function(){
-    if(search.value.length > 0){
-        window.location = "https://www.google.com.br/search?q=" + search.value; //botar onde pesquisar
-        search.value = "";
-    }else {
-        form.classList.toggle("actived")
-    }
-
+  searchBtn.addEventListener("click", function(i){
+    i.preventDefault();
+    validator.validate(formChange);
   });
 
 
 
  // MOSTRAR CADASTROS
  
+let searchClient = document.querySelector(".clients-register");
+let idClient = document.querySelector(".show-register");
+let searchClientBtn= document.querySelector(".btn-show-client");
+
+searchClientBtn.addEventListener("click", function(a){
+    a.preventDefault();
+    if(idClient.value.length > 0){
+        let response = getClient(idClient.value)
+        console.log(response)
+    }
+});
+
+
+async function getClient (cpf) {
+    
+    const response = await fetch("http://127.0.0.1:8000/showclient/"+ cpf, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+  
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`)
+    }
+    
+     return await response.text()
+     
+  }
+
+
 
 
 

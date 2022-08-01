@@ -409,7 +409,9 @@ input, select, textarea {
 
 	.search-txt{
 		color: #000000;
-		
+	}
+	.show-register{
+		color: #000000;
 	}
 
 	input[type="text"],
