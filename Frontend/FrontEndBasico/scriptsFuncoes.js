@@ -1,3 +1,7 @@
+// CADASTRAR
+
+
+
 class Validator {
     constructor(){
         this.validations = [
@@ -178,3 +182,37 @@ async function postData (data) {
     }
     console.log("Request successful!")
   }
+
+
+
+
+  // ALTERAR
+
+  let formChange = document.querySelector(".search-box");
+  let search = document.querySelector(".search-txt");
+  let searchBtn = document.querySelector(".btn-search")
+
+  searchBtn.addEventListener("click", function(){
+    if(search.value.length > 0){
+        window.location = "https://www.google.com.br/search?q=" + search.value; //botar onde pesquisar
+        search.value = "";
+    }else {
+        form.classList.toggle("actived")
+    }
+
+  });
+
+ 
+
+
+  /*let obj = {
+    "identificadorCpf":  inputsChange['idCpf'].value,
+    "novoNome": "thaisinha",
+    "novoCpf": "17366848731",
+    "novaDataNascimento": "21-12-1909",
+    "novoEmail": "thaisinha@gmail.com",
+    "novoCartaoDeCredito": {
+    "numero": "1728391728394726",
+    "vencimento": "12/27",
+    "cvv": "834"
+  };*/

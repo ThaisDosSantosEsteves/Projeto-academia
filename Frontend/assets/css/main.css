@@ -383,6 +383,32 @@ input, select, textarea {
 		line-height: 1.5;
 		margin: 0 0 1rem 0;
 		text-transform: uppercase;
+		margin-top: 10px;
+		margin-bottom: 0;
+	}
+	
+	#btn-submit{
+		color: #ffffff;
+		display: block;
+		font-size: 0.8rem;
+		font-weight: 300;
+		letter-spacing: 0.2rem;
+		line-height: 1.5;
+		margin: 0 0 1rem 0;
+		text-transform: uppercase;
+		margin-top: 10px;
+		margin-bottom: 0;
+		margin-left: 38%;
+	}
+
+	.show-client{
+		margin-bottom: 20px;
+		margin-top: 0;
+	}
+
+	.search-txt{
+		color: #000000;
+		
 	}
 
 	input[type="text"],
@@ -1140,9 +1166,12 @@ input, select, textarea {
 			-ms-transition-delay: 0.75s;
 			transition-delay: 0.75s;
 			background-image: linear-gradient(to top, rgba(19, 21, 25, 0.5), rgba(19, 21, 25, 0.5)), url("../../images/overlay.png");
-			background-size: auto, 256px 256px;
-			background-position: center, center;
-			background-repeat: no-repeat, repeat;
+			background-size: auto,
+ 256px 256px;
+			background-position: center,
+ center;
+			background-repeat: no-repeat,
+ repeat;
 			z-index: 2;
 		}
 
@@ -1287,17 +1316,9 @@ input, select, textarea {
 				display: none;
 			}
 
-		#header .logo {
-			width: 5.5rem;
-			height: 5.5rem;
-			line-height: 5.5rem;
-			border: solid 1px #ffffff;
-			border-radius: 100%;
-		}
+		
 
-			#header .logo .icon:before {
-				font-size: 2rem;
-			}
+			
 
 		#header .content {
 			border-style: solid;
@@ -1437,16 +1458,9 @@ input, select, textarea {
 					height: calc(2rem + 1px);
 				}
 
-			#header .logo {
-				width: 4.75rem;
-				height: 4.75rem;
-				line-height: 4.75rem;
-			}
+			
 
-				#header .logo .icon:before {
-					font-size: 1.75rem;
-				}
-
+				
 			#header .content .inner {
 				padding: 2.5rem 1rem;
 			}
@@ -1655,4 +1669,8 @@ input, select, textarea {
 
 		body.is-preload #footer {
 			opacity: 0;
+		}
+
+		.error-validation{
+			color: burlywood;
 		}

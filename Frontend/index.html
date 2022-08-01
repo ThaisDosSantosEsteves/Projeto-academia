@@ -14,22 +14,18 @@
 
 				<!-- Header -->
 					<header id="header">
-						<div class="logo">
-							<span class="icon fa-gem"></span>
-						</div>
 						<div class="content">
 							<div class="inner">
-								<h1>Dimension</h1>
-								<p>A fully responsive site template designed by <a href="https://html5up.net">HTML5 UP</a> and released<br />
-								for free under the <a href="https://html5up.net/license">Creative Commons</a> license.</p>
+								<h1>BioFit Studio</h1>
+								<p>Movidos pelo resultado</p>
 							</div>
 						</div>
 						<nav>
 							<ul>
-								<li><a href="#intro">Intro</a></li>
-								<li><a href="#work">Work</a></li>
-								<li><a href="#about">About</a></li>
-								<li><a href="#contact">Contact</a></li>
+								<li><a href="#cadastro">Cadastrar</a></li>
+								<li><a href="#altera">Alterar</a></li>
+								<li><a href="#remove">Remover</a></li>
+								<li><a href="#clientes">Clientes</a></li>
 								<!--<li><a href="#elements">Elements</a></li>-->
 							</ul>
 						</nav>
@@ -38,8 +34,8 @@
 				<!-- Main -->
 					<div id="main">
 
-						<!-- Intro -->
-							<article id="intro">
+						<!-- Cadastro -->
+							<article id="cadastro">
 								<div id="main-container">
 									<h1>Cadastrar</h1>
 									<form id="register-form">
@@ -53,7 +49,7 @@
 										</div>
 										<div class="half-box">
 											<label for="dataNascimento">Data de Nascimento</label>
-											<input type="text" name="dataNascimento" id="DataNascimento" placeholder="Digite sua data de nascimento" data-required>
+											<input type="text" name="dataNascimento" id="DataNascimento" placeholder="Digite sua data de nascimento" data-required  data-min-length="4">
 										</div>
 										<div class="half-box">
 											<label for="cpf">CPF</label>
@@ -71,57 +67,46 @@
 											<label for="vencimento">Vencimento</label>
 											<input type="text" name="vencimento" id="vencimento" placeholder="Vencimento" data-required data-only-numbers data-min-length="4">
 										</div>
-										<div class="full-box">
+										<div class="full-box ">
 											<input type="submit" id="btn-submit" value="Registrar">
 										</div>
 									</form>
 								</div>	
 							</article>
 
-						<!-- Work -->
-							<article id="work">
-								<h2 class="major">Work</h2>
-								<span class="image main"><img src="images/pic02.jpg" alt="" /></span>
-								<p>Adipiscing magna sed dolor elit. Praesent eleifend dignissim arcu, at eleifend sapien imperdiet ac. Aliquam erat volutpat. Praesent urna nisi, fringila lorem et vehicula lacinia quam. Integer sollicitudin mauris nec lorem luctus ultrices.</p>
-								<p>Nullam et orci eu lorem consequat tincidunt vivamus et sagittis libero. Mauris aliquet magna magna sed nunc rhoncus pharetra. Pellentesque condimentum sem. In efficitur ligula tate urna. Maecenas laoreet massa vel lacinia pellentesque lorem ipsum dolor. Nullam et orci eu lorem consequat tincidunt. Vivamus et sagittis libero. Mauris aliquet magna magna sed nunc rhoncus amet feugiat tempus.</p>
+						<!-- Alterar -->
+							<article id="altera">
+								<div>
+									<h1>Alterar</h1>
+									<h4>Digite o CPF do cliente.</h4>
+									<form class="search-box" method="get" action="https://www.google.com.br/search?q=">
+									<input type="search" name="idCpf" class="search-txt" data-required data-min-length="11" data-only-numbers>
+									</form>
+									<button class="btn-search" >Pesquisar</button>
+								</div>
 							</article>
 
-						<!-- About -->
-							<article id="about">
-								<h2 class="major">About</h2>
-								<span class="image main"><img src="images/pic03.jpg" alt="" /></span>
-								<p>Lorem ipsum dolor sit amet, consectetur et adipiscing elit. Praesent eleifend dignissim arcu, at eleifend sapien imperdiet ac. Aliquam erat volutpat. Praesent urna nisi, fringila lorem et vehicula lacinia quam. Integer sollicitudin mauris nec lorem luctus ultrices. Aliquam libero et malesuada fames ac ante ipsum primis in faucibus. Cras viverra ligula sit amet ex mollis mattis lorem ipsum dolor sit amet.</p>
+						<!-- Remover -->
+							<article id="remove">
+								<div>
+									<h1>Remover</h1>
+									<h4>Digite o CPF do cliente que deseja remover.</h4>
+									<form class="search-box" method="get" action="https://www.google.com.br/search?q=">
+									<input type="search" name="idCpf" class="search-txt" data-required data-min-length="11" data-only-numbers>
+									</form>
+									<button class="btn-search" >Pesquisar</button>
+								</div>
 							</article>
 
-						<!-- Contact -->
-							<article id="contact">
-								<h2 class="major">Contact</h2>
-								<form method="post" action="#">
-									<div class="fields">
-										<div class="field half">
-											<label for="name">Name</label>
-											<input type="text" name="name" id="name" />
-										</div>
-										<div class="field half">
-											<label for="email">Email</label>
-											<input type="text" name="email" id="email" />
-										</div>
-										<div class="field">
-											<label for="message">Message</label>
-											<textarea name="message" id="message" rows="4"></textarea>
-										</div>
-									</div>
-									<ul class="actions">
-										<li><input type="submit" value="Send Message" class="primary" /></li>
-										<li><input type="reset" value="Reset" /></li>
-									</ul>
-								</form>
-								<ul class="icons">
-									<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-									<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-									<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
-									<li><a href="#" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
-								</ul>
+						<!-- Clientes -->
+							<article id="clientes">
+								<h1>Cadastros</h1>
+								<div>
+									<button class="show-client" >Mostrar cliente</button>
+								</div>
+								<div>
+									<button class="" >Mostrar todos os clientes</button>
+								</div>
 							</article>
 
 						<!-- Elements -->
@@ -370,7 +355,7 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 
 				<!-- Footer -->
 					<footer id="footer">
-						<p class="copyright">&copy; Untitled. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+						<p class="copyright">&copy; BioFit Studio. Design: <a href="https://github.com/ThaisDosSantosEsteves">Thais Esteves</a>.</p>
 					</footer>
 
 			</div>
@@ -384,6 +369,10 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
+			<script src="FrontEndBasico/scriptsFuncoes.js"></script>
+
+			<p class="error-validation template"></p>
+			
 
 	</body>
 </html>
