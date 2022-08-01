@@ -202,17 +202,11 @@ async function postData (data) {
 
   });
 
+
+
+ // MOSTRAR CADASTROS
  
 
 
-  /*let obj = {
-    "identificadorCpf":  inputsChange['idCpf'].value,
-    "novoNome": "thaisinha",
-    "novoCpf": "17366848731",
-    "novaDataNascimento": "21-12-1909",
-    "novoEmail": "thaisinha@gmail.com",
-    "novoCartaoDeCredito": {
-    "numero": "1728391728394726",
-    "vencimento": "12/27",
-    "cvv": "834"
-  };*/
+
+  

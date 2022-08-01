@@ -102,7 +102,11 @@
 							<article id="clientes">
 								<h1>Cadastros</h1>
 								<div>
-									<button class="show-client" >Mostrar cliente</button>
+									<h4>Digite o CPF do cliente que deseja mostrar.</h4>
+									<form class="search-box" method="get" action="https://www.google.com.br/search?q=">
+									<input type="search" name="idCpf" class="search-txt" data-required data-min-length="11" data-only-numbers>
+									
+									<button class="btn-show-client" >Mostrar cliente</button>
 								</div>
 								<div>
 									<button class="" >Mostrar todos os clientes</button>
