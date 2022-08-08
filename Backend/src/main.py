@@ -1,11 +1,11 @@
 from fastapi import FastAPI
-from infoClientes import cliente
-from alteracaoCliente import alteracaoCliente
-from identificacaoInfosCiente import identificacaoInfosCliente
 from datetime import datetime
 import re
-import validacaoDeDados
 from fastapi.middleware.cors import CORSMiddleware
+
+from api.inputs.clientInput import ClientInput
+from application import validacaoDeDados
+from infrastructure.database import Database
 
 app = FastAPI()
 
@@ -19,141 +19,114 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-listaClientes = list()
+
 format = "%d/%m/%Y"
 pattern = "^(0[1-9]|1[0-2])\/?([0-9]{4}|[0-9]{2})$"
 
+database = Database()
 
-@app.get("/showallclients")
-async def mostrarClientes():
-    return listaClientes
+@app.get("/clients")
+async def getAllClients():
+    return database.getAllClients()
 
 
 @app.post("/create")
-async def criarCliente(novoCliente:cliente):
-    print("entrou")
-    print(novoCliente)
+async def createClient(client:ClientInput):
 
-    cpfValidado = validacaoDeDados.validarCpf(novoCliente.cpf)
+    cpfValidado = validacaoDeDados.validarCpf(client.document)
     if not cpfValidado:
         print("erro no cpf")
         return "ERRO! Cpf inválido."
-    cadastroValidado = validacaoDeDados.validarCadastroCpf(listaClientes, novoCliente.cpf)
-    if not cadastroValidado:
-        print("cpf ja cadastrado")
-        return "ERRO! Cpf já cadastrado"
 
-    nomeValidado = validacaoDeDados.validarNome(novoCliente.nome)
+    nomeValidado = validacaoDeDados.validarNome(client.name)
     if not nomeValidado:
         print("nome invalido")
         return "ERRO! Nome inválido."
 
-    emailValidado = validacaoDeDados.validarEmail(novoCliente.email)
+    emailValidado = validacaoDeDados.validarEmail(client.email)
     if not emailValidado:
         print("email invalido")
         return "ERRO! Email inválido."
-    cadastroValidadoEmail = validacaoDeDados.validarCadastroCpfEmail(listaClientes, novoCliente.email)
-    if not cadastroValidadoEmail:
-        print("email ja cadastrado")
-        return "ERRO! Email já cadastrado."
+    
 
-    numeroCartaoValidado = validacaoDeDados.validarNumeroCartao(novoCliente.cartaoDeCredito.numero)
+    numeroCartaoValidado = validacaoDeDados.validarNumeroCartao(client.creditCardInput.number)
     if not numeroCartaoValidado:
         print("numero de cartao invalido")
         return "ERRO! Número do cartão inválido."
 
-    cvvValidado = validacaoDeDados.validarCvvCartao(novoCliente.cartaoDeCredito.cvv)
+    cvvValidado = validacaoDeDados.validarCvvCartao(client.creditCardInput.cvv)
     if not cvvValidado:
         print("cvv invalido")
         return "ERRO! CVV inválido."
 
-    result = re.match(pattern, novoCliente.cartaoDeCredito.vencimento)
+    result = re.match(pattern, client.creditCardInput.expiration)
     if not result:
         print("vencimento errado")
         return "Formato de Vencimento inválido."
 
     try:
-        res = datetime.strptime(novoCliente.dataNascimento, format)
+        res = datetime.strptime(client.birthDate, format)
     except ValueError:
         print("data invalida")
         return "Formato de data inválida."
-    print(novoCliente)
-    listaClientes.append(novoCliente)
-    return novoCliente
+    database.createClient(client.toClient())
 
 
-@app.put("/change")
-async def alterarCliente(identificacaoCliente:alteracaoCliente):
+@app.put("/update")
+async def updateClient(newClient:ClientInput):
 
-    for dados in listaClientes:
-        if identificacaoCliente.identificadorCpf == dados.cpf:
-            print("Achou o cliente")
+    cpfValidado = validacaoDeDados.validarCpf(newClient.document)
+    if not cpfValidado:
+        return "ERRO! Cpf inválido."
 
-            cpfValidado = validacaoDeDados.validarCpf(identificacaoCliente.novoCpf)
-            if not cpfValidado:
-                return "ERRO! Cpf inválido."
-            cadastroValidado = validacaoDeDados.validarCadastroCpf(listaClientes, identificacaoCliente.novoCpf)
-            if not cadastroValidado:
-                return "ERRO! Cpf já cadastrado"
 
-            nomeValidado = validacaoDeDados.validarNome(identificacaoCliente.novoNome)
-            if not nomeValidado:
-                return "ERRO! Nome inválido."
+    nomeValidado = validacaoDeDados.validarNome(newClient.name)
+    if not nomeValidado:
+        return "ERRO! Nome inválido."
 
-            emailValidado = validacaoDeDados.validarEmail(identificacaoCliente.novoEmail)
-            if not emailValidado:
-                return "ERRO! Email inválido."
-            cadastroValidadoEmail = validacaoDeDados.validarCadastroCpfEmail(listaClientes, identificacaoCliente.novoEmail)
-            if not cadastroValidadoEmail:
-                return "ERRO! Email já cadastrado."
+    emailValidado = validacaoDeDados.validarEmail(newClient.email)
+    if not emailValidado:
+        return "ERRO! Email inválido."
 
-            numeroCartaoValidado = validacaoDeDados.validarNumeroCartao(identificacaoCliente.novoCartaoDeCredito.numero)
-            if not numeroCartaoValidado:
-                return "ERRO! Número do cartão inválido."
+    numeroCartaoValidado = validacaoDeDados.validarNumeroCartao(newClient.creditCardInput.number)
+    if not numeroCartaoValidado:
+        return "ERRO! Número do cartão inválido."
 
-            cvvValidado = validacaoDeDados.validarCvvCartao(identificacaoCliente.novoCartaoDeCredito.cvv)
-            if not cvvValidado:
-                return "ERRO! CVV inválido."
+    cvvValidado = validacaoDeDados.validarCvvCartao(newClient.creditCardInput.cvv)
+    if not cvvValidado:
+        return "ERRO! CVV inválido."
 
-            result = re.match(pattern, identificacaoCliente.novoCartaoDeCredito.vencimento)
-            if not result:
-                return "Formato de Vencimento inválido."
+    result = re.match(pattern, newClient.creditCardInput.expiration)
+    if not result:
+        return "Formato de Vencimento inválido."
 
-            try:
-                res = datetime.strptime(identificacaoCliente.novaDataNascimento, format)
-            except ValueError:
-                return "Formato de data inválida."
+    try:
+        res = datetime.strptime(newClient.birthDate, format)
+    except ValueError:
+        return "Formato de data inválida."
 
-            dados.nome = identificacaoCliente.novoNome
-            dados.cpf = identificacaoCliente.novoCpf
-            dados.email = identificacaoCliente.novoEmail
-            dados.dataNascimento = identificacaoCliente.novaDataNascimento
-            dados.cartaoDeCredito.numero = identificacaoCliente.novoCartaoDeCredito.numero
-            dados.cartaoDeCredito.cvv = identificacaoCliente.novoCartaoDeCredito.cvv
-            dados.cartaoDeCredito.vencimento = identificacaoCliente.novoCartaoDeCredito.vencimento
-            return "Achou"
+    success = database.updateClient(newClient.document, newClient.toClient())
+    if success:
+        return "Dados atualizados."
+    
+    return "ERRO! Dados nao atualizados."
 
+
+@app.get("/client/{cpf}")
+async def getClient(cpf):
+
+    client = database.getClient(cpf)
+    if client != None:
+        return client
     return "Cliente não cadastrado"
 
 
-@app.get("/showclient/{cpf}")
-async def mostrarCliente(cpf):
+@app.delete("/client/{cpf}")
+async def removeClient(cpf):
 
-    for dados in listaClientes:
-        if cpf == dados.cpf:
-            return dados
-
-    return "Cliente não cadastrado"
-
-
-@app.delete("/removeclient")
-async def removerCliente(identificacaoInfosCiente:identificacaoInfosCliente):
-
-    for dados in listaClientes:
-        if identificacaoInfosCiente.identificadorCpf == dados.cpf:
-            listaClientes.remove(dados)
-            return listaClientes
-
+    success = database.removeClient(cpf)
+    if success:
+        return "Dados apagados"
     return "Cliente não cadastrado"
 
 
