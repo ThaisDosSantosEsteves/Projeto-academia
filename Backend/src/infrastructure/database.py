@@ -61,7 +61,7 @@ class Database:
         
         UPDATE public."CreditCard" 
         SET number = %s, cvv = %s, expiration = %s
-        WHERE 
+        
 
         """
         cursor = self.db.cursor()
