@@ -1,6 +1,5 @@
 from domain.creditCard import CreditCard
 
-
 class Client():
     name: str
     document: str

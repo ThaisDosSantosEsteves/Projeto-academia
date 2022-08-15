@@ -7,6 +7,7 @@ class Database:
         self.db = psycopg2.connect(user="postgres",
                                   host="127.0.0.1",
                                   port="5432",
+                                  password="123",
                                   database="minhaAcademia")
         
     def getAllClients(self):
@@ -20,40 +21,70 @@ class Database:
     
     def createClient(self, client):
         query = """
-        INSERT INTO public."Client" (
-            name, document, "birthDate", email, "creditCardId"
+       
+        INSERT INTO public."CreditCard" (
+        number, cvv, expiration
         )
-        VALUES (%s, %s, TO_DATE(%s, 'DD/MM/YYYY'), %s, 1 )
+        VALUES (%s, %s, %s); 
+    
+    
+        INSERT INTO public."Client" (
+        name, document, "birthDate", email, "creditCardId"
+            )
+        VALUES (%s, %s, TO_DATE(%s, 'DD/MM/YYYY'), %s, 
+        currval(pg_get_serial_sequence('public."CreditCard"','id'))); 
+                
         """
         cursor = self.db.cursor()
-        cursor.execute(query, (client.name, client.document, client.birthDate, client.email))
+        cursor.execute(query, (client.creditCard.number, client.creditCard.cvv, client.creditCard.expiration,
+                               client.name, client.document, client.birthDate, client.email))
         self.db.commit()
         return True
     
     def updateClient(self, idClient, newClient):
-        for client in self.listaClientes:
-            if idClient == client.document:
-                client.name = newClient.name
-                client.document = newClient.document
-                client.email = newClient.email
-                client.birthdate = newClient.birthDate
-                client.creditCard.number = newClient.creditCard.number
-                client.creditCard.cvv = newClient.creditCard.cvv
-                client.creditCard.expiration = newClient.creditCard.expiration
-                return True
-        return False
+        query = """
+    
+        UPDATE public."Client" 
+        SET name = %s, document = %s, "birthDate" = %s,
+        email = %s,
+        WHERE "document" = %s
+        
+        
+        """
+        cursor = self.db.cursor()
+        cursor.execute(query, (newClient.name, newClient.document, newClient.birthDate, newClient.email, idClient))
+        self.db.commit()
+        return True
+
+    def updateCreditCard(self, newCreditCard):
+        query = """
+        
+        UPDATE public."CreditCard" 
+        SET number = %s, cvv = %s, expiration = %s
+        WHERE 
+
+        """
+        cursor = self.db.cursor()
+        cursor.execute(query, (newCreditCard.number, newCreditCard.cvv, newCreditCard.expiration))
+        self.db.commit()
+        return True
     
     def getClient(self, idClient):
-        for client in self.listaClientes:
-            if idClient == client.document:
-                return client
-        return None
-    
+        query = """
+        SELECT  * FROM public."Client" 
+        WHERE "document" = %s
+                """
+        cursor = self.db.cursor()
+        cursor.execute(query, (idClient,))
+        client = cursor.fetchone()
+        return client
+
     def removeClient(self, idClient):
-        for client in self.listaClientes:
-            if idClient == client.document:
-                self.listaClientes.remove(client)
-                return True
-        return False
-    
-    
+        query = """
+        DELETE from public."Client"
+        WHERE "document" = %s
+                """
+        cursor = self.db.cursor()
+        cursor.execute(query, (idClient))
+        self.db.commit()
+        return True

@@ -1,6 +1,6 @@
 from pydantic import BaseModel
-from api.inputs.creditCardInput import CreditCardInput
 from domain.client import Client
+from inputs.creditCardInput import CreditCardInput
 from domain.creditCard import CreditCard
 
 
@@ -9,9 +9,9 @@ class ClientInput(BaseModel):
     name: str
     birthDate: str
     email: str
-    creditCardInput: CreditCardInput
+    creditcard: CreditCardInput
+
     
     def toClient(self):
-        return Client(self.name, self.document, self.birthDate, self.email, 
-                      CreditCard(self.creditCardInput.number, self.creditCardInput.cvv,
-                                 self.creditCardInput.expiration))
+        return Client(self.name, self.document, self.birthDate, self.email,
+                      CreditCard(self.creditcard.number, self.creditcard.cvv, self.creditcard.expiration))
