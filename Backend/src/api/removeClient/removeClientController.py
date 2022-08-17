@@ -1,9 +1,11 @@
 from fastapi import APIRouter
 
-router = APIRouter()
+from infrastructure.database import Database
+
+removeClientRouter = APIRouter()
 database = Database()
 
-@router.delete("/client/{document}")
+@removeClientRouter.delete("/client/{document}")
 async def removeClient(document):
 
     success = database.removeClient(document)

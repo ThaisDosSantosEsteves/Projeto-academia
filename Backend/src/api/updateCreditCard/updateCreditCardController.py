@@ -5,9 +5,9 @@ from api.updateCreditCard.input.updateCreditCardIpnut import UpdateCreditCardInp
 
 from infrastructure.database import Database
 
-router = APIRouter()
+updateCreditCardRouter = APIRouter()
 database = Database()
-@router.put("/updateCreditCard/{document}")
+@updateCreditCardRouter.put("/updateCreditCard/{document}")
 async def updateCreditCard(document, newCreditCard: UpdateCreditCardInput):
     if not dataValidator.creditCardNumberValidator(newCreditCard.number):
         return "ERRO! Número do cartão inválido."
@@ -18,4 +18,4 @@ async def updateCreditCard(document, newCreditCard: UpdateCreditCardInput):
     if not dataValidator.expirationValidator(newCreditCard.expiration):
         return "ERRO! Expiration inválida."
 
-    database.updateCreditCard()
+    database.updateCreditCard(document, newCreditCard)

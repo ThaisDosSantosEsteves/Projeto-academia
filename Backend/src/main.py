@@ -1,20 +1,20 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from api.getAllClients import getAllClientsController
-from api.getClient import getClientController
-from api.removeClient import removeClientController
-from api.updateClient import updateClientController
-from api.updateCreditCard import updateCreditCardController
-from api.createClient import createClientController
+from api.getAllClients.getAllClientsController import getAllClientsRouter
+from api.getClient.getClientController import getClientRouter
+from api.removeClient.removeClientController import removeClientRouter
+from api.updateClient.updateClientController import updateClientRouter
+from api.updateCreditCard.updateCreditCardController import updateCreditCardRouter
+from api.createClient.createClientController import createClientRouter
 
 app = FastAPI()
-app.include_router(createClientController)
-app.include_router(getClientController)
-app.include_router(getAllClientsController)
-app.include_router(removeClientController)
-app.include_router(updateClientController)
-app.include_router(updateCreditCardController)
+app.include_router(getAllClientsRouter)
+app.include_router(getClientRouter)
+app.include_router(removeClientRouter)
+app.include_router(updateClientRouter)
+app.include_router(updateCreditCardRouter)
+app.include_router(createClientRouter)
 origins = ["*"]
 
 app.add_middleware(

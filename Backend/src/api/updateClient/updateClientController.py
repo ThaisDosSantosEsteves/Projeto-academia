@@ -7,9 +7,9 @@ from api.updateClient.input.updateClientInput import UpdateClientInput
 from infrastructure.database import Database
 
 database = Database()
-router = APIRouter()
+updateClientRouter = APIRouter()
 
-@router.put("/updateClient")
+@updateClientRouter.put("/updateClient")
 async def updateClient(newClient: UpdateClientInput):
     if not dataValidator.documentValidator(newClient.document):
         return "ERRO! Cpf inválido."

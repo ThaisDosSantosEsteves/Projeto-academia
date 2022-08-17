@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from domain.client import Client
-from inputs.creditCardInput import CreditCardInput
+from api.inputs.creditCardInput import CreditCardInput
 from domain.creditCard import CreditCard
 
 

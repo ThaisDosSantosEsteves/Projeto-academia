@@ -1,10 +1,10 @@
 from infrastructure.database import Database
 from fastapi import APIRouter
 
-router = APIRouter()
+getAllClientsRouter = APIRouter()
 database = Database()
 
 
-@router.get("/clients")
+@getAllClientsRouter.get("/clients")
 async def getAllClients():
     return database.getAllClients()

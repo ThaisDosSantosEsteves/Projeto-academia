@@ -1,11 +1,11 @@
 from infrastructure.database import Database
 from fastapi import APIRouter
 
-router = APIRouter()
+getClientRouter = APIRouter()
 database = Database()
 
 
-@router.get("/client/{document}")
+@getClientRouter.get("/client/{document}")
 async def getClient(document):
 
     client = database.getClient(document)

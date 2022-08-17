@@ -1,6 +1,10 @@
 import psycopg2
 from psycopg2 import Error
 
+from domain.client import Client
+
+from domain.creditCard import CreditCard
+
 
 class Database:
     def __init__(self):
@@ -12,12 +16,20 @@ class Database:
         
     def getAllClients(self):
         query = """
-        SELECT * FROM public."Client"
+        SELECT c.name, c.document, c.email, c."birthDate", cc.number, cc.cvv, cc.expiration
+        FROM public."Client" as c
+        JOIN public."CreditCard" as cc
+        ON c."creditCardId" = cc.id
         """
         cursor = self.db.cursor()
         cursor.execute(query)
         clients = cursor.fetchall()
-        return clients
+        clientsList = []
+        for client in clients:
+            newClient =  Client(client[0], client[1], client[2], client[3],
+                   CreditCard(client[4], client[5], client[6]))
+            clientsList.append(newClient)
+        return clientsList
     
     def createClient(self, client):
         query = """
@@ -56,16 +68,16 @@ class Database:
         self.db.commit()
         return True
 
-    def updateCreditCard(self, newCreditCard):
+    def updateCreditCard(self, document, newCreditCard):
         query = """
-        
-        UPDATE public."CreditCard" 
+        UPDATE public."CreditCard" as cc
         SET number = %s, cvv = %s, expiration = %s
-        
-
+        FROM public."Client" as c
+        WHERE cc.id = c."creditCardId" 
+        AND c.document = %s
         """
         cursor = self.db.cursor()
-        cursor.execute(query, (newCreditCard.number, newCreditCard.cvv, newCreditCard.expiration))
+        cursor.execute(query, (newCreditCard.number, newCreditCard.cvv, newCreditCard.expiration, document))
         self.db.commit()
         return True
     
@@ -75,7 +87,7 @@ class Database:
         WHERE "document" = %s
                 """
         cursor = self.db.cursor()
-        cursor.execute(query, (idClient,))
+        cursor.execute(query, (idClient))
         client = cursor.fetchone()
         return client
 
