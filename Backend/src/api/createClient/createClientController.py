@@ -42,3 +42,4 @@ async def createClient(client:ClientInput):
 
 
     database.createClient(client.toClient())
+    return JSONResponse(status_code=200, content={'message': "Cliente cadastrado com sucesso."})

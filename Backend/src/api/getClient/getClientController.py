@@ -1,5 +1,6 @@
 from infrastructure.database import Database
 from fastapi import APIRouter
+from starlette.responses import JSONResponse
 
 getClientRouter = APIRouter()
 database = Database()
@@ -10,6 +11,8 @@ async def getClient(document):
 
     client = database.getClient(document)
     if client != None:
-        return client
-    return "Cliente não cadastrado"
+        return JSONResponse(status_code=200, content=client)
+
+    return JSONResponse(status_code=400, content={'message': "Cliente não cadastrado"})
+
 

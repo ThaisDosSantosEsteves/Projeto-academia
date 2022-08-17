@@ -26,45 +26,39 @@ class Database:
         clients = cursor.fetchall()
         clientsList = []
         for client in clients:
-            newClient =  Client(client[0], client[1], client[2], client[3],
+            newClient = Client(client[0], client[1], client[2], client[3],
                    CreditCard(client[4], client[5], client[6]))
             clientsList.append(newClient)
         return clientsList
     
     def createClient(self, client):
         query = """
-       
         INSERT INTO public."CreditCard" (
         number, cvv, expiration
         )
         VALUES (%s, %s, %s); 
-    
-    
         INSERT INTO public."Client" (
         name, document, "birthDate", email, "creditCardId"
             )
         VALUES (%s, %s, TO_DATE(%s, 'DD/MM/YYYY'), %s, 
         currval(pg_get_serial_sequence('public."CreditCard"','id'))); 
-                
         """
         cursor = self.db.cursor()
         cursor.execute(query, (client.creditCard.number, client.creditCard.cvv, client.creditCard.expiration,
                                client.name, client.document, client.birthDate, client.email))
         self.db.commit()
+
         return True
     
-    def updateClient(self, idClient, newClient):
+    def updateClient(self, document, newClient):
         query = """
-    
         UPDATE public."Client" 
         SET name = %s, document = %s, "birthDate" = %s,
-        email = %s,
-        WHERE "document" = %s
-        
-        
+        email = %s
+        WHERE document = %s;
         """
         cursor = self.db.cursor()
-        cursor.execute(query, (newClient.name, newClient.document, newClient.birthDate, newClient.email, idClient))
+        cursor.execute(query, (newClient.name, newClient.document, newClient.birthDate, newClient.email, document))
         self.db.commit()
         return True
 
@@ -81,22 +75,28 @@ class Database:
         self.db.commit()
         return True
     
-    def getClient(self, idClient):
+    def getClient(self, document):
         query = """
-        SELECT  * FROM public."Client" 
+        SELECT c.name, c.document, c.email, c."birthDate", cc.number, cc.cvv, cc.expiration
+        FROM public."Client" as c
+        JOIN public."CreditCard" as cc
+        ON c."creditCardId" = cc.id
         WHERE "document" = %s
-                """
+        """
         cursor = self.db.cursor()
-        cursor.execute(query, (idClient))
+        cursor.execute(query, (document,))
         client = cursor.fetchone()
-        return client
+        newClient = Client(client[0], client[1], client[2], client[3],
+                           CreditCard(client[4], client[5], client[6]))
+        return newClient
 
-    def removeClient(self, idClient):
+    def removeClient(self, document):
         query = """
-        DELETE from public."Client"
-        WHERE "document" = %s
-                """
+        DELETE FROM public."CreditCard" 
+        WHERE id IN (SELECT "creditCardId" FROM public."Client" 
+        WHERE document = %s);
+        """
         cursor = self.db.cursor()
-        cursor.execute(query, (idClient))
+        cursor.execute(query, (document,))
         self.db.commit()
         return True
