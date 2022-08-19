@@ -21,26 +21,29 @@ const numeroCartao = document.getElementById('registro-numero-cartao');
 const vencimentoCartao = document.getElementById('registro-vencimento-cartao');
 const cvvCartao = document.getElementById('registro-cvv-cartao');
 const onlyLetters = /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/;
+const onlyNumbers = /^[0-9]+$/;
+const emailValidator = /\S+@\S+\.\S+/;
+/* DATA FORMATADA
+const dataFormatada = dataNascimento.value.replaceAll("-", "/")
+*/
+
+ 
+
+
 
 formCadastro.addEventListener('submit', (i) => {
     i.preventDefault()
-
     checkInputs()
-
 });
 
-function checkInputs(){
-    const emailValue = email.value.trim()
-    const dataNascimentoValue = dataNascimento.value.trim()
-    const cpfValue = cpf.value.trim()
-    const numeroCartaoValue = numeroCartao.value.trim()
-    const vencimentoCartaoValue = vencimentoCartao.value.trim()
-    const cvvCartaoValue = cvvCartao.value.trim()
-    
 
+
+function checkInputs(){
     validarNome(nome)
-    
-    
+    validarCpf(cpf)
+    validarEmail(email)
+    validarNumeroCartao(numeroCartao)
+    validarCvvCartao(cvvCartao)
 }
 
 function validarNome(nome){
@@ -59,6 +62,68 @@ function validarNome(nome){
     }
 
 }
+function validarCpf(cpf){
+    if(cpf.value === ''){
+        errorValidation(cpf, 'Campo Obrigatório')
+
+    } else if (!onlyNumbers.test(cpf.value.trim())){
+        errorValidation(cpf, 'Este campo não aceita letras nem caracteres especiais')
+
+    } else if (cpf.value.length < 11) {
+        errorValidation(cpf, 'O CPF deve ter 11 caracteres')
+
+    } else {
+        successValidation(cpf)
+    }
+}
+function validarEmail(email){
+    if(email.value === ''){
+        errorValidation(email, 'Campo Obrigatório')
+
+    } else if (!emailValidator.test(email.value.trim()) ) {
+        errorValidation(email, 'Insira um email no padrão exemplo@email.com')
+
+    } else {
+        successValidation(email)
+    }
+}
+function validarNumeroCartao(numeroCartao){
+    if(numeroCartao.value === ''){
+        errorValidation(numeroCartao, 'Campo Obrigatório')
+
+    } else if (!onlyNumbers.test(numeroCartao.value.trim())){
+        errorValidation(numeroCartao, 'Este campo não aceita letras nem caracteres especiais')
+
+    } else if (numeroCartao.value.length < 16){
+        errorValidation(numeroCartao, 'Este campo deve ter 16 caracteres')
+
+    }else if (numeroCartao.value.length > 16){
+        errorValidation(numeroCartao, 'Este campo deve ter 16 caracteres')
+
+    }else {
+        successValidation(numeroCartao)
+    }
+}
+function validarCvvCartao(cvvCartao){
+    if(cvvCartao.value === ''){
+        errorValidation(cvvCartao, 'Campo Obrigatório')
+
+    } else if (!onlyNumbers.test(cvvCartao.value.trim())){
+        errorValidation(cvvCartao, 'Este campo não aceita letras nem caracteres especiais')
+
+    } else if (cvvCartao.value.length < 3){
+        errorValidation(cvvCartao, 'Este campo deve ter 3 caracteres')
+
+    } else if (cvvCartao.value.length > 3){
+        errorValidation(cvvCartao, 'Este campo deve ter 3 caracteres')
+
+    }else {
+        successValidation(cvvCartao)
+    }
+}
+
+
+
 
 
 function errorValidation(input, message){
@@ -68,7 +133,6 @@ function errorValidation(input, message){
     formControl.className = 'form-control error'
     
 }
-
 function successValidation(input){
     const formControl = input.parentElement;
     const small = formControl.querySelector('small')
