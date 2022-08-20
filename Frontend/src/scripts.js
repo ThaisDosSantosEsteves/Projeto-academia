@@ -23,12 +23,12 @@ const cvvCartao = document.getElementById('registro-cvv-cartao');
 const onlyLetters = /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/;
 const onlyNumbers = /^[0-9]+$/;
 const emailValidator = /\S+@\S+\.\S+/;
+const expiration = /^[0-9/]+$/;
 /* DATA FORMATADA
 const dataFormatada = dataNascimento.value.replaceAll("-", "/")
 */
 
  
-
 
 
 formCadastro.addEventListener('submit', (i) => {
@@ -44,7 +44,11 @@ function checkInputs(){
     validarEmail(email)
     validarNumeroCartao(numeroCartao)
     validarCvvCartao(cvvCartao)
+    validarVencimentoCartao(vencimentoCartao)
+    validarDataDeNascimento(dataNascimento)
 }
+
+
 
 function validarNome(nome){
 
@@ -121,8 +125,32 @@ function validarCvvCartao(cvvCartao){
         successValidation(cvvCartao)
     }
 }
+function validarVencimentoCartao(vencimentoCartao){
+    if(vencimentoCartao.value === ''){
+        errorValidation(vencimentoCartao, 'Campo Obrigatório')
 
+    } else if (!expiration.test(vencimentoCartao.value.trim())){
+        errorValidation(vencimentoCartao, 'Este campo não aceita letras')
 
+    } else if (vencimentoCartao.value.length < 5){
+        errorValidation(vencimentoCartao, 'Escreva a data de vencimento no formato MM/AA')
+
+    } else if (vencimentoCartao.value.length > 5){
+        errorValidation(vencimentoCartao, 'Escreva a data de vencimento no formato MM/AA')
+
+    }else {
+        successValidation(vencimentoCartao)
+    }
+}
+function validarDataDeNascimento(dataNascimento){
+
+    if(dataNascimento.value === ''){
+        errorValidation(dataNascimento, 'Campo Obrigatório')
+        
+    } else {
+        successValidation(dataNascimento)
+    }
+}
 
 
 
