@@ -2,30 +2,6 @@
 // CADASTRO
 
 const formCadastro = document.getElementById('cadastro-form');
-
-// FUNÇÃO QUE CADASTRA O CLIENTE EM UMA LISTA
-/*formCadastro.addEventListener('submit', function criarCadastro(e){
-    e.preventDefault();
-    const criaNomeCliente = document.getElementById('registro-nome');
-    const listaClientes = document.getElementById('lista-de-clientes'); // mudar para banco de dados
-    listaClientes.insertAdjacentHTML('afterend', `<li>${criaNomeCliente.value}</li>`); // está adicionando na lista
-
-});*/
-
- /*let data = {
-    "document": ,
-    "name": ,
-    "birthDate": ,
-    "email": 
-        "numero": inputs["numeroCartao"].value,
-        "vencimento": inputs["vencimento"].value,  // alterar para botar as infos de mudança
-        "cvv": inputs["cvv"].value
-    }
-    
-}*/
-
-// VALIDAÇÕES
-
 const nome = document.getElementById('registro-nome');
 const email = document.getElementById('registro-email');
 const dataNascimento = document.getElementById('registro-data');
@@ -41,13 +17,8 @@ const expiration = /^[0-9/]+$/;
 const dataFormatada = dataNascimento.value.replaceAll("-", "/")
 */
 
- 
 
-
-formCadastro.addEventListener('submit', (i) => {
-    i.preventDefault()
-    checkInputs()
-});
+// VALIDAÇÕES
 
 
 
@@ -59,10 +30,8 @@ function checkInputs(){
     validarCvvCartao(cvvCartao)
     validarVencimentoCartao(vencimentoCartao)
     validarDataDeNascimento(dataNascimento)
+
 }
-
-
-
 function validarNome(nome){
 
     if(nome.value === ''){
@@ -76,7 +45,9 @@ function validarNome(nome){
 
     } else {
         successValidation(nome)
-    }
+        return true
+    } 
+    return false
 
 }
 function validarCpf(cpf){
@@ -94,7 +65,9 @@ function validarCpf(cpf){
 
     }else {
         successValidation(cpf)
+        return true
     }
+    return false
 }
 function validarEmail(email){
     if(email.value === ''){
@@ -105,7 +78,9 @@ function validarEmail(email){
 
     } else {
         successValidation(email)
+        return true
     }
+    return false
 }
 function validarNumeroCartao(numeroCartao){
     if(numeroCartao.value === ''){
@@ -122,7 +97,9 @@ function validarNumeroCartao(numeroCartao){
 
     }else {
         successValidation(numeroCartao)
+        return true
     }
+    return false
 }
 function validarCvvCartao(cvvCartao){
     if(cvvCartao.value === ''){
@@ -139,7 +116,9 @@ function validarCvvCartao(cvvCartao){
 
     }else {
         successValidation(cvvCartao)
+        return true
     }
+    return false
 }
 function validarVencimentoCartao(vencimentoCartao){
     if(vencimentoCartao.value === ''){
@@ -156,7 +135,9 @@ function validarVencimentoCartao(vencimentoCartao){
 
     }else {
         successValidation(vencimentoCartao)
+        return true
     }
+    return false
 }
 function validarDataDeNascimento(dataNascimento){
 
@@ -165,11 +146,10 @@ function validarDataDeNascimento(dataNascimento){
         
     } else {
         successValidation(dataNascimento)
+        return true
     }
+    return false
 }
-
-
-
 function errorValidation(input, message){
     const formControl = input.parentElement;
     const small = formControl.querySelector('small')
@@ -183,6 +163,59 @@ function successValidation(input){
     small.innerText = " "
     formControl.className = 'form-control success'
 }
+
+
+// CADASTRO
+
+formCadastro.addEventListener('submit', (i) => {
+    i.preventDefault()
+    let sucesso = checkInputs()
+    if(sucesso){
+        let data = {
+            "document": cpf.value,
+            "name": nome.value,
+            "birthDate": new Date(dataNascimento.value.replaceAll("-", "/")).toLocaleDateString("pt-BR"),
+            "email": email.value,
+            "creditcard": {
+                "number": numeroCartao.value,
+                "cvv": cvvCartao.value,
+                "expiration": vencimentoCartao.value
+            }
+            
+        }
+        console.log(data)
+        createClient(data) 
+    }
+        
+});
+// FUNÇÃO QUE CADASTRA O CLIENTE EM UMA LISTA
+/*formCadastro.addEventListener('submit', function criarCadastro(e){
+    e.preventDefault();
+   let result = validator.validate(form);
+    let data = result["data"]
+    let success = result["success"]
+    if(success){
+        createClient(data)
+    }*/
+
+   
+
+
+async function createClient (data) {
+    
+    const response = await fetch("http://127.0.0.1:8000/create", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+  
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`)
+    }
+    console.log("Request successful!")}
+
 
 
 

@@ -10,9 +10,8 @@ createClientRouter = APIRouter()
 
 @createClientRouter.post("/create")
 async def createClient(client:ClientInput):
-
     if not dataValidator.creditCardNumberValidator(client.creditcard.number):
-        print("numero de cartao invalido")
+        print("número de cartao invalido")
         return JSONResponse(status_code=400, content={'message': "ERRO! Número do cartão inválido."})
 
     if not dataValidator.expirationValidator(client.creditcard.expiration):

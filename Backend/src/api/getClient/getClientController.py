@@ -11,7 +11,7 @@ async def getClient(document):
 
     client = database.getClient(document)
     if client != None:
-        return JSONResponse(status_code=200, content=client)
+        return client
 
     return JSONResponse(status_code=400, content={'message': "Cliente não cadastrado"})
 

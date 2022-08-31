@@ -1,4 +1,5 @@
 from domain.creditCard import CreditCard
+import json
 
 class Client():
     name: str
@@ -13,7 +14,4 @@ class Client():
         self.birthDate = birthDate
         self.document = document
         self.creditCard = creditCard
-
-
-
 
