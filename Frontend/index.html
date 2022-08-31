@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biofit Studio</title>
+    <title>Thais Gym</title>
 </head>
 <body>
     <header>
-        <h1>BioFit Studio</h1>
+        <h1>Thais Gym</h1>
 	    <p>Movidos pelo resultado</p>
 
+        <!-- Cadastro -->
         <article>
             <div>
                 <h1>Cadastrar</h1>
@@ -39,7 +40,7 @@
                     <small></small>
                     </div>
 
-                    <h3>Cartão de Crédito</h3>
+                    <h4>Cartão de Crédito</h4>
 
                     <div>
                     <label></label>
@@ -62,8 +63,50 @@
                     <input type="submit" value="Registrar">
                 </form>
             </div>
+        </article>
 
+        <!-- Alterar -->
+        <article>
+            <div>
+                <h1>Alterar</h1>
+                <h4>Digite o CPF do cliente.</h4>
+                <form id="formAlterar" method="put" >
+                    <input type="search" id="idCliente" >
+                    <button type="submit" id="btn-pesquisar" >Pesquisar</button>
+                    <small></small>
+                </form>
+            </div>
+        </article>
+
+        <!-- Remover -->
+        <article>
+            <div>
+                <h1>Remover</h1>
+                <h4>Digite o CPF do cliente que deseja remover.</h4>
+                <form id="formRemover" method="delete">
+                <input type="search" id="idClienteRemove">
+                <button type="submit" id="btn-remover" >Pesquisar</button>
+                <small></small>
+                </form>
+            </div>
+        </article>
+
+        <!-- Clientes -->
+        <article>
+            <h1>Cadastros</h1>
+            <div>
+                <h4>Digite o CPF do cliente que deseja mostrar.</h4>
+                <form id="formCliente">
+                <input type="search" id="idClienteInfo">
+                <button type="submit" id="btn-mostrarCliente" >Pesquisar</button>
+                <small></small>
+            </div>
+            <div id="clienteInfo"></div>
+          
             
+            <div>
+                <button type="submit" id="btn-mostrarTodosClientes">Mostrar todos os clientes</button>
+            </div>
 
         </article>
 
