@@ -1,9 +1,10 @@
 import psycopg2
-from psycopg2 import Error
+from psycopg2 import Error, errors
 
 from domain.client import Client
 
 from domain.creditCard import CreditCard
+from psycopg2.errorcodes import UNIQUE_VIOLATION
 
 
 class Database:
@@ -43,10 +44,14 @@ class Database:
         VALUES (%s, %s, TO_DATE(%s, 'DD/MM/YYYY'), %s, 
         currval(pg_get_serial_sequence('public."CreditCard"','id'))); 
         """
-        cursor = self.db.cursor()
-        cursor.execute(query, (client.creditCard.number, client.creditCard.cvv, client.creditCard.expiration,
-                               client.name, client.document, client.birthDate, client.email))
-        self.db.commit()
+        try:
+            cursor = self.db.cursor()
+            cursor.execute(query, (client.creditCard.number, client.creditCard.cvv, client.creditCard.expiration,
+                                   client.name, client.document, client.birthDate, client.email))
+            self.db.commit()
+        except errors.lookup(UNIQUE_VIOLATION):
+            self.db.rollback()
+            return False
 
         return True
     

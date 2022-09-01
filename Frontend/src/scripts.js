@@ -1,6 +1,4 @@
 
-// CADASTRO
-
 const formCadastro = document.getElementById('cadastro-form');
 const nome = document.getElementById('registro-nome');
 const email = document.getElementById('registro-email');
@@ -13,25 +11,24 @@ const onlyLetters = /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓ�
 const onlyNumbers = /^[0-9]+$/;
 const emailValidator = /\S+@\S+\.\S+/;
 const expiration = /^[0-9/]+$/;
-/* DATA FORMATADA
-const dataFormatada = dataNascimento.value.replaceAll("-", "/")
-*/
 
 
 // VALIDAÇÕES
 
 
-
 function checkInputs(){
-    validarNome(nome)
-    validarCpf(cpf)
-    validarEmail(email)
-    validarNumeroCartao(numeroCartao)
-    validarCvvCartao(cvvCartao)
-    validarVencimentoCartao(vencimentoCartao)
-    validarDataDeNascimento(dataNascimento)
+    let validName = validarNome(nome)
+    let validCpf = validarCpf(cpf)
+    let validEmail = validarEmail(email)
+    let validCardNumber = validarNumeroCartao(numeroCartao)
+    let validCVV = validarCvvCartao(cvvCartao)
+    let validExpiration = validarVencimentoCartao(vencimentoCartao)
+    let validBirthdate = validarDataDeNascimento(dataNascimento)
 
+    return validName && validCVV && validCpf && validBirthdate && validExpiration && validEmail && validCardNumber
 }
+
+
 function validarNome(nome){
 
     if(nome.value === ''){
@@ -188,17 +185,7 @@ formCadastro.addEventListener('submit', (i) => {
     }
         
 });
-// FUNÇÃO QUE CADASTRA O CLIENTE EM UMA LISTA
-/*formCadastro.addEventListener('submit', function criarCadastro(e){
-    e.preventDefault();
-   let result = validator.validate(form);
-    let data = result["data"]
-    let success = result["success"]
-    if(success){
-        createClient(data)
-    }*/
 
-   
 
 
 async function createClient (data) {

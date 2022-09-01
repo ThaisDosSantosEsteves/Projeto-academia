@@ -1,3 +1,6 @@
+from psycopg2.errorcodes import UNIQUE_VIOLATION
+from psycopg2 import errors
+
 from starlette.responses import JSONResponse
 
 from api.inputs.clientInput import ClientInput
@@ -40,5 +43,10 @@ async def createClient(client:ClientInput):
         return JSONResponse(status_code=400, content={'message': "ERRO! Data de nascimento inválida."})
 
 
-    database.createClient(client.toClient())
+    success = database.createClient(client.toClient())
+
+    if not success:
+        return JSONResponse(status_code=400, content={'message': "ERRO! documento duplicado."})
+
     return JSONResponse(status_code=200, content={'message': "Cliente cadastrado com sucesso."})
+
