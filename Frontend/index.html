@@ -70,10 +70,35 @@
             <div>
                 <h1>Alterar</h1>
                 <h4>Digite o CPF do cliente.</h4>
-                <form id="formAlterar" method="put" >
+                <form id="formAlterar" >
                     <input type="search" id="idCliente" >
-                    <button type="submit" id="btn-pesquisar" >Pesquisar</button>
+                    <button type="submit" id="btn-pesquisar">Pesquisar</button>
                     <small></small>
+                    
+                    <div>
+                        <label></label>
+                        <input type="text" id="alterar-nome" placeholder="Digite o novo nome completo">
+                        <small></small>
+                        </div>
+    
+                        <div>
+                        <label></label>
+                        <input type="text" id="alterar-email" placeholder="Digite o novo email">
+                        <small></small>
+                        </div>
+    
+                        <div>
+                        <label></label>
+                        <input type="date" id="alterar-data" placeholder="Digite a nova data de nascimento">
+                        <small></small>
+                        </div>
+    
+                        <div>
+                        <label></label>
+                        <input type="text" id="alterar-cpf"  placeholder="Digite o novo CPF">
+                        <small></small>
+                        </div>
+                    <input type="submit" value="Alterar">
                 </form>
             </div>
         </article>
@@ -100,13 +125,16 @@
                 <input type="search" id="idClienteInfo">
                 <button type="submit" id="btn-mostrarCliente" >Pesquisar</button>
                 <small></small>
+                </form>
             </div>
             <div id="clienteInfo"></div>
+                
           
             
             <div>
                 <button type="submit" id="btn-mostrarTodosClientes">Mostrar todos os clientes</button>
             </div>
+            <div id="todosOsClienteInfo"></div>
 
         </article>
 

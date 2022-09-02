@@ -15,7 +15,6 @@ const expiration = /^[0-9/]+$/;
 
 // VALIDAÇÕES
 
-
 function checkInputs(){
     let validName = validarNome(nome)
     let validCpf = validarCpf(cpf)
@@ -27,8 +26,21 @@ function checkInputs(){
 
     return validName && validCVV && validCpf && validBirthdate && validExpiration && validEmail && validCardNumber
 }
+function checkInputsAlterarCliente(){
+    let validName = validarNome(novoNome)
+    let validCpf = validarCpf(novoCpf)
+    let validEmail = validarEmail(novoEmail)
+    let validBirthdate = validarDataDeNascimento(novaDataNascimento)
 
+    return validName && validCpf && validBirthdate  && validEmail 
+}
+function checkInputsAlterarCartao(){
+    let validCardNumber = validarNumeroCartao(numeroCartao)
+    let validCVV = validarCvvCartao(cvvCartao)
+    let validExpiration = validarVencimentoCartao(vencimentoCartao)
 
+    return validCVV && validExpiration && validCardNumber
+}
 function validarNome(nome){
 
     if(nome.value === ''){
@@ -160,55 +172,6 @@ function successValidation(input){
     small.innerText = " "
     formControl.className = 'form-control success'
 }
-
-
-// CADASTRO
-
-formCadastro.addEventListener('submit', (i) => {
-    i.preventDefault()
-    let sucesso = checkInputs()
-    if(sucesso){
-        let data = {
-            "document": cpf.value,
-            "name": nome.value,
-            "birthDate": new Date(dataNascimento.value.replaceAll("-", "/")).toLocaleDateString("pt-BR"),
-            "email": email.value,
-            "creditcard": {
-                "number": numeroCartao.value,
-                "cvv": cvvCartao.value,
-                "expiration": vencimentoCartao.value
-            }
-            
-        }
-        console.log(data)
-        createClient(data) 
-    }
-        
-});
-
-
-
-async function createClient (data) {
-    
-    const response = await fetch("http://127.0.0.1:8000/create", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-  
-    if (!response.ok) {
-      throw new Error(`Request failed with status ${response.status}`)
-    }
-    console.log("Request successful!")}
-
-
-
-
-// ALTERAR
-
-
 function checkId(input){
     if(input.value === ''){
         errorValidation(input, 'Campo Obrigatório')
@@ -229,25 +192,95 @@ function checkId(input){
     return false
 }
 
+
+
+// CADASTRO
+
+async function createClient (data) {
+    
+    const response = await fetch("http://127.0.0.1:8000/create", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+  
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`)
+    }
+    console.log("Request successful!")
+}
+
+formCadastro.addEventListener('submit', (i) => {
+    i.preventDefault()
+    let sucesso = checkInputs()
+    if(sucesso){
+        let data = {
+            "document": cpf.value,
+            "name": nome.value,
+            "birthDate": new Date(dataNascimento.value.replaceAll("-", "/")).toLocaleDateString("pt-BR"),
+            "email": email.value,
+            "creditcard": {
+                "number": numeroCartao.value,
+                "cvv": cvvCartao.value,
+                "expiration": vencimentoCartao.value
+            }
+            
+        }
+        console.log(data)
+        createClient(data) 
+    }
+});
+
+
+// ALTERAR
+
 const formAlterarCliente= document.getElementById("formAlterar")
 const idCliente = document.getElementById("idCliente")
 const btnPesquisar = document.getElementById("btn-pesquisar")
+const novoNome = document.getElementById('alterar-nome');
+const novoEmail = document.getElementById('alterar-email');
+const novaDataNascimento = document.getElementById('alterar-data');
+const novoCpf = document.getElementById('alterar-cpf');
+
 
 formAlterarCliente.addEventListener('submit', (e) => {
     e.preventDefault()
-    checkId(idCliente)
-});
-                                                              // MUDAR 
-
-
-btnPesquisar.addEventListener("click", function(){
-    if (idCliente.value.length > 0){
-         getClient(idCliente.value) //botar onde pesquisar
-        idCliente.value = "";
-    } else{
-        formAlterarCliente.classList.toggle("actived")
+    let sucesso = checkId(idCliente)
+    if (sucesso){
+        let sucessoAlterar = checkInputsAlterarCliente()
+        if (sucessoAlterar){
+            let dataAlterar = {
+                "document": novoCpf.value,
+                "name": novoNome.value,
+                "birthDate": new Date(novaDataNascimento.value.replaceAll("-", "/")).toLocaleDateString("pt-BR"),
+                "email": novoEmail.value
+            }
+            console.log(dataAlterar)
+            updateClient(idCliente.value, dataAlterar)
+        }
     }
-})
+    
+});
+
+async function updateClient (id, data) {
+    
+    const response = await fetch("http://127.0.0.1:8000/updateClient/" + id, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"},
+      body: JSON.stringify(data)
+      
+    })
+    .then((r) => r.json())
+    .then((data) => payload = data)
+    console.log("payload", payload)
+    console.log("response", response)
+}
+                                                          
+
+
 
 
 
@@ -259,113 +292,16 @@ const btnRemover = document.getElementById("btn-remover")
 
 formRemoverCliente.addEventListener('submit', (e) => {
     e.preventDefault()
-    checkId(idClienteRemove)
-});
-
-
-
-// MOSTRAR CLIENTE
-const clientList = document.getElementById('clienteInfo');
-
-async function getClient (id) {
-    
-    let payload = {}
-    let response = await fetch("http://127.0.0.1:8000/client/" + id, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-    .then((r) => r.json())
-    .then((data) => payload = data)
-    console.log("payload", payload)
-    console.log("response", response)
-
-    let documentCliente = payload["document"]
-    let dataNascimento = payload["birthDate"]
-    let nome = payload["name"]
-    let email  = payload["email"]
-    let creditCardCVV = payload["creditCard"]["cvv"]
-    let creditCardExpiration = payload["creditCard"]["expiration"]
-    let creditCardNumber = payload["creditCard"]["number"]
-
-    const container = document.createElement('ul');
-	const novaInfo = document.createElement('li');
-	const infoCpf = document.createTextNode('CPF: ' + documentCliente);
-    const infoDataDeNascimento  = document.createTextNode('Data de Nascimento: ' + dataNascimento);
-	const infoNome = document.createTextNode('Nome: ' + nome);
-	const infoEmail = document.createTextNode('Email: ' + email);
-	const infoCreditCardCvv = document.createTextNode('CVV: ' + creditCardCVV);
-	const infoCreditCardNumber = document.createTextNode('Vencimento: ' + creditCardExpiration);
-	const infoCreditCardExpiration = document.createTextNode('Número: ' + creditCardNumber);
-
-    
-	novaInfo.setAttribute('for', nome);
-    novaInfo.appendChild(infoNome);
-    
-	novaInfo.setAttribute('for', documentCliente);
-	novaInfo.appendChild(infoCpf);
-
-    novaInfo.setAttribute('for', dataNascimento);
-	novaInfo.appendChild(infoDataDeNascimento);
-
-    novaInfo.setAttribute('for', email);
-	novaInfo.appendChild(infoEmail);
-
-    novaInfo.setAttribute('for', creditCardNumber);
-	novaInfo.appendChild(infoCreditCardNumber);
-
-    novaInfo.setAttribute('for', creditCardCVV);
-	novaInfo.appendChild(infoCreditCardCvv);
-
-    novaInfo.setAttribute('for', creditCardExpiration);
-	novaInfo.appendChild(infoCreditCardExpiration);
-
-
-	container.classList.add('info');
-	container.appendChild(novaInfo);
-
-
-	clientList.appendChild(container);
-    
-
-}
-
-
-const formMostrarCliente= document.getElementById("formCliente")
-const idClienteInfo = document.getElementById("idClienteInfo")
-const btnMostrarCliente = document.getElementById("btn-mostrarCliente")
-
-formMostrarCliente.addEventListener('submit', (e) => {
-    e.preventDefault()
-    let sucesso = checkId(idClienteInfo)
+    let sucesso = checkId(idClienteRemove)
     if (sucesso){
-        getClient(idClienteInfo.value) 
+        removeClient(idClienteRemove.value) 
     }
 });
 
-/*btnMostrarCliente.addEventListener("click", function(){
-    if (idClienteInfo.value.length > 0){
-         getClient(idClienteInfo.value) 
-        idClienteInfo.value = "";
-    } else{
-        formMostrarCliente.classList.toggle("actived")
-    }
-})*/
-
-
-
-
-
-
-// MOSTRAR TODOS OS CLIENTES
-
-const btnMostrarTodosClientes = document.getElementById("btn-mostrarTodosClientes")
-
-async function getAllClients () {
-  
-    const response = await fetch("http://127.0.0.1:8000/clients/", {
-      method: "GET",
+async function removeClient (id) {
+    
+    const response = await fetch("http://127.0.0.1:8000/client/" + id, {
+      method: "DELETE",
       headers: {
         "Content-Type": "application/json"
       }
@@ -375,9 +311,189 @@ async function getAllClients () {
       throw new Error(`Request failed with status ${response.status}`)
     }
     console.log("Request successful!")
-    console.log(response.json())
-  }
+}
 
+
+// MOSTRAR CLIENTE
+const clientList = document.getElementById('clienteInfo');
+const formMostrarCliente= document.getElementById("formCliente")
+const idClienteInfo = document.getElementById("idClienteInfo")
+const btnMostrarCliente = document.getElementById("btn-mostrarCliente")
+
+async function getClient (id) {
+    
+    let response = await fetch("http://127.0.0.1:8000/client/" + id, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+    .then((r) => {
+        if(!r.ok){
+            let err = new Error("HTTP status code: " + r.status)
+             err.response = r
+             err.status = r.status
+             throw err
+        }
+        return r.json()
+    })
+    console.log("response", response)
+
+    let documentCliente = response["document"]
+    let dataNascimento = response["birthDate"]
+    let nome = response["name"]
+    let email = response["email"]
+    let creditCardCVV = response["creditCard"]["cvv"]
+    let creditCardExpiration = response["creditCard"]["expiration"]
+    let creditCardNumber = response["creditCard"]["number"]
+
+    const container = document.createElement('ul');
+	const mostrarNome = document.createElement('li');
+    const mostrarEmail = document.createElement('li');
+    const mostrarCpf = document.createElement('li');
+    const mostrarData = document.createElement('li');
+    const mostrarCvv = document.createElement('li');
+    const mostrarNumero = document.createElement('li');
+    const mostrarVencimento = document.createElement('li');
+	const infoCpf = document.createTextNode('CPF: ' + documentCliente);
+    const infoDataDeNascimento  = document.createTextNode('Data de Nascimento: ' + dataNascimento);
+	const infoNome = document.createTextNode('Nome: ' + nome);
+	const infoEmail = document.createTextNode('Email: ' + email);
+	const infoCreditCardCvv = document.createTextNode('CVV: ' + creditCardCVV);
+	const infoCreditCardExpiration = document.createTextNode('Vencimento: ' + creditCardExpiration);
+	const infoCreditCardNumber = document.createTextNode('Número: ' + creditCardNumber);
+
+    
+	mostrarNome.setAttribute('for', nome);
+    mostrarNome.appendChild(infoNome);
+    
+	mostrarCpf.setAttribute('for', documentCliente);
+	mostrarCpf.appendChild(infoCpf);
+
+    mostrarData.setAttribute('for', dataNascimento);
+	mostrarData.appendChild(infoDataDeNascimento);
+
+    mostrarEmail.setAttribute('for', email);
+	mostrarEmail.appendChild(infoEmail);
+
+    mostrarNumero.setAttribute('for', creditCardNumber);
+	mostrarNumero.appendChild(infoCreditCardNumber);
+
+    mostrarCvv.setAttribute('for', creditCardCVV);
+	mostrarCvv.appendChild(infoCreditCardCvv);
+
+    mostrarVencimento.setAttribute('for', creditCardExpiration);
+	mostrarVencimento.appendChild(infoCreditCardExpiration);
+
+
+	container.classList.add('info');
+	container.appendChild(mostrarNome);
+    container.appendChild(mostrarCpf);
+    container.appendChild(mostrarEmail);
+    container.appendChild(mostrarData);
+    container.appendChild(mostrarNumero);
+    container.appendChild(mostrarVencimento);
+    container.appendChild(mostrarCvv);
+
+
+	clientList.appendChild(container);
+    
+
+}
+formMostrarCliente.addEventListener('submit', (e) => {
+    e.preventDefault()
+    let sucesso = checkId(idClienteInfo)
+    if (sucesso){
+        getClient(idClienteInfo.value) 
+    }
+});
+
+
+// MOSTRAR TODOS OS CLIENTES
+
+const AllClientsList = document.getElementById('todosOsClienteInfo');
+const btnMostrarTodosClientes = document.getElementById("btn-mostrarTodosClientes")
+
+async function getAllClients () {
+  
+    let response = await fetch("http://127.0.0.1:8000/clients", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+    .then((r) => {
+        if(!r.ok){
+            let err = new Error("HTTP status code: " + r.status)
+             err.response = r
+             err.status = r.status
+             throw err
+        }
+        return r.json()
+    })
+    console.log("response", response)
+
+    let documentCliente = response["document"]
+    let dataNascimento = response["birthDate"]
+    let nome = response["name"]
+    let email = response["email"]
+    let creditCardCVV = response["creditCard"]["cvv"]
+    let creditCardExpiration = response["creditCard"]["expiration"]
+    let creditCardNumber = response["creditCard"]["number"]
+
+    const container = document.createElement('ul');
+	const mostrarNome = document.createElement('li');
+    const mostrarEmail = document.createElement('li');
+    const mostrarCpf = document.createElement('li');
+    const mostrarData = document.createElement('li');
+    const mostrarCvv = document.createElement('li');
+    const mostrarNumero = document.createElement('li');
+    const mostrarVencimento = document.createElement('li');
+	const infoCpf = document.createTextNode('CPF: ' + documentCliente);
+    const infoDataDeNascimento  = document.createTextNode('Data de Nascimento: ' + dataNascimento);
+	const infoNome = document.createTextNode('Nome: ' + nome);
+	const infoEmail = document.createTextNode('Email: ' + email);
+	const infoCreditCardCvv = document.createTextNode('CVV: ' + creditCardCVV);
+	const infoCreditCardExpiration = document.createTextNode('Vencimento: ' + creditCardExpiration);
+	const infoCreditCardNumber = document.createTextNode('Número: ' + creditCardNumber);
+
+    
+	mostrarNome.setAttribute('for', nome);
+    mostrarNome.appendChild(infoNome);
+    
+	mostrarCpf.setAttribute('for', documentCliente);
+	mostrarCpf.appendChild(infoCpf);
+
+    mostrarData.setAttribute('for', dataNascimento);
+	mostrarData.appendChild(infoDataDeNascimento);
+
+    mostrarEmail.setAttribute('for', email);
+	mostrarEmail.appendChild(infoEmail);
+
+    mostrarNumero.setAttribute('for', creditCardNumber);
+	mostrarNumero.appendChild(infoCreditCardNumber);
+
+    mostrarCvv.setAttribute('for', creditCardCVV);
+	mostrarCvv.appendChild(infoCreditCardCvv);
+
+    mostrarVencimento.setAttribute('for', creditCardExpiration);
+	mostrarVencimento.appendChild(infoCreditCardExpiration);
+
+
+	container.classList.add('info');
+	container.appendChild(mostrarNome);
+    container.appendChild(mostrarCpf);
+    container.appendChild(mostrarEmail);
+    container.appendChild(mostrarData);
+    container.appendChild(mostrarNumero);
+    container.appendChild(mostrarVencimento);
+    container.appendChild(mostrarCvv);
+
+
+	clientList.appendChild(container);
+    
+
+}
   btnMostrarTodosClientes.addEventListener("click", function(){
     getAllClients() 
 })

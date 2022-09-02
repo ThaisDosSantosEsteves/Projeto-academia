@@ -10,7 +10,7 @@ database = Database()
 async def getClient(document):
 
     client = database.getClient(document)
-    if client != None:
+    if client is not None:
         return client
 
     return JSONResponse(status_code=400, content={'message': "Cliente não cadastrado"})

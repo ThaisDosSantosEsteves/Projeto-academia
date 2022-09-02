@@ -17,7 +17,7 @@ class Database:
         
     def getAllClients(self):
         query = """
-        SELECT c.name, c.document, c.email, c."birthDate", cc.number, cc.cvv, cc.expiration
+        SELECT c.name, c.document, c."birthDate", c.email, cc.number, cc.cvv, cc.expiration
         FROM public."Client" as c
         JOIN public."CreditCard" as cc
         ON c."creditCardId" = cc.id
@@ -82,7 +82,7 @@ class Database:
     
     def getClient(self, document):
         query = """
-        SELECT c.name, c.document, c.email, c."birthDate", cc.number, cc.cvv, cc.expiration
+        SELECT c.name, c.document, c."birthDate", c.email, cc.number, cc.cvv, cc.expiration
         FROM public."Client" as c
         JOIN public."CreditCard" as cc
         ON c."creditCardId" = cc.id
@@ -91,9 +91,11 @@ class Database:
         cursor = self.db.cursor()
         cursor.execute(query, (document,))
         client = cursor.fetchone()
-        newClient = Client(client[0], client[1], client[2], client[3],
-                           CreditCard(client[4], client[5], client[6]))
-        return newClient
+        if client is not None:
+            newClient = Client(client[0], client[1], client[2], client[3],
+                               CreditCard(client[4], client[5], client[6]))
+            return newClient
+        return None
 
     def removeClient(self, document):
         query = """
